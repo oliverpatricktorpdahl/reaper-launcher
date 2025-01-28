@@ -5,3 +5,5 @@
 *.RPP-bak
 *.RPP
 Media/
+
+.vscode/

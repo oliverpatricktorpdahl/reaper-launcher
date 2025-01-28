@@ -20,6 +20,26 @@ function reasy.save()
 end
 
 
+
+reasy.select = {}
+function reasy.select.tracks_matching_wildcard(wildcard)
+    -- Convert wildcard to Lua pattern
+    local pattern = wildcard:gsub("([%^%$%(%)%%%.%[%]%*%+%-%?])", "%%%1") -- Escape special characters
+                            :gsub("%%%*", ".*") -- Convert '*' wildcard to Lua '.*'
+
+    -- Iterate through all tracks
+    local track_count = reaper.CountTracks(0)
+    for i = 0, track_count - 1 do
+        local track = reaper.GetTrack(0, i)
+        local _, track_name = reaper.GetSetMediaTrackInfo_String(track, "P_NAME", "", false)
+        if track_name:match(pattern) then
+            reaper.SetTrackSelected(track, true) -- Select the track
+        else
+            reaper.SetTrackSelected(track, false) -- Deselect if it doesn't match
+        end
+    end
+end
+
 reasy.run = {}
 
 function reasy.run.select_all_media_items()
